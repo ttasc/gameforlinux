@@ -12,7 +12,7 @@ help:
 	@echo "  uninstall-<g> - uninstall specific game"
 	@echo "  build         - build all games locally"
 	@echo "  build-<g>     - build specific game locally"
-	@echo "  release       - cross-compile all games for release (amd64, arm64, 386)"
+	@echo "  release       - cross-compile all games for release (Linux, macOS, BSD)"
 	@echo "  release-<g>   - cross-compile specific game for release"
 	@echo "  test          - verify installations"
 	@echo "  test-<g>      - verify specific game"

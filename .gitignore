@@ -5,11 +5,6 @@
 *.a
 *.so
 
-# Binaries
-/sudokute
-/termines
-/gotermoku
-
 # IDE
 .vscode/
 .idea/

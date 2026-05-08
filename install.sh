@@ -18,24 +18,32 @@ else
     exit 1
 fi
 
+os=$(uname -s | tr '[:upper:]' '[:lower:]')
+case "$os" in
+    linux|darwin|freebsd|openbsd|netbsd|dragonfly) ;;
+    *) echo "error: unsupported os: $os" >&2; exit 1 ;;
+esac
+
 arch=$(uname -m)
 case "$arch" in
-    x86_64|amd64) arch="linux-amd64" ;;
-    aarch64|arm64) arch="linux-arm64" ;;
-    i*86) arch="linux-386" ;;
+    x86_64|amd64) arch="amd64" ;;
+    aarch64|arm64) arch="arm64" ;;
+    i*86) arch="386" ;;
     *) echo "error: unsupported arch: $arch" >&2; exit 1 ;;
 esac
+
+echo "setting up gameforlinux ($os-$arch)..."
 
 mkdir -p "$CACHEDIR"
 
 install_game() {
     game="$1"
-    echo "downloading $game ($arch)..."
+    echo "downloading $game ($os-$arch)..."
 
     tag=$($DL - "https://api.github.com/repos/$ORG/$game/releases/latest" 2>/dev/null | grep '"tag_name"' | cut -d'"' -f4)
     [ -z "$tag" ] && tag="latest"
 
-    url="https://github.com/$ORG/$game/releases/download/$tag/$game-$arch"
+    url="https://github.com/$ORG/$game/releases/download/$tag/$game-$os-$arch"
 
     if $DL "$CACHEDIR/$game" "$url"; then
         chmod +x "$CACHEDIR/$game"
@@ -60,8 +68,7 @@ else
         echo "error: $GAMES_FILE not found" >&2
         exit 1
     fi
-    while IFS= read -r game || [ -n "$game" ]; do
-        [ -z "$game" ] ||[ "${game#\#}" != "$game" ] && continue
+    while IFS= read -r game || [ -n "$game" ]; do [ -z "$game" ] || [ "${game#\#}" != "$game" ] && continue
         install_game "$game"
     done < "$GAMES_FILE"
 fi

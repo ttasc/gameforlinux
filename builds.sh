@@ -25,9 +25,13 @@ build_game() {
     fi
 
     if [ "$RELEASE" = "1" ]; then
-        for arch in amd64 arm64; do
-            echo "building $game (linux-$arch)..."
-            (cd "$TEMP_DIR/$game" && GOOS=linux GOARCH=$arch go build -ldflags="-s -w" -o "$BUILD_DIR/$game-linux-$arch")
+        TARGETS="linux/amd64 linux/arm64 linux/386 darwin/amd64 darwin/arm64 freebsd/amd64 openbsd/amd64 netbsd/amd64 dragonfly/amd64"
+        for target in $TARGETS; do
+            os="${target%/*}"
+            arch="${target#*/}"
+
+            echo "building $game ($os-$arch)..."
+            (cd "$TEMP_DIR/$game" && GOOS=$os GOARCH=$arch go build -ldflags="-s -w" -o "$BUILD_DIR/$game-$os-$arch")
         done
     else
         echo "building $game (native)..."

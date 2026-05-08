@@ -47,7 +47,7 @@ make install-sudokute
 ```
 
 ### Method 2: Manual Download
-Download binaries directly from [GitHub Releases](https://github.com/ttasc/gameforlinux/releases):
+Download the binary files directly from **GitHub Releases** on each *game's repository*. Then:
 ```bash
 # Example for one game
 chmod +x <game-name>
@@ -71,8 +71,8 @@ make build            # Build all games from source
 ---
 
 ## 💻 System Requirements
-- **OS:** Linux (any distribution)
-- **Architecture:** x86_64 (amd64), ARM64
+- **OS:** Linux, macOS (Darwin), FreeBSD, OpenBSD, NetBSD, DragonFly
+- **Architecture:** x86_64 (amd64), ARM64 (Apple Silicon), x86 (386)
 - **Terminal:** Any POSIX-compliant terminal
 - **Dependencies:** None! (Static binaries)
 
