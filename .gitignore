@@ -1,0 +1,36 @@
+# Build artifacts
+/build/
+/dist/
+*.o
+*.a
+*.so
+
+# Binaries
+/sudokute
+/termines
+/gotermoku
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Test coverage
+*.out
+*.test
+
+# Temporary files
+.cache/
+/tmp/
+*.tmp
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Editor backup files
+*.bak
+*.backup
