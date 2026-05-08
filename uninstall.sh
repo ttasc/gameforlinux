@@ -1,96 +1,56 @@
-#!/bin/bash
-
-# GameForLinux Uninstallation Script
-# Clean removal of all games and related files
+#!/bin/sh
+# uninstall.sh - remove gameforlinux games
 
 set -e
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+PREFIX="${PREFIX:-/usr/local}"
+BINDIR="${PREFIX}/bin"
+CACHEDIR="${HOME}/.gameforlinux"
+GAMES_FILE="$(dirname "$0")/games.list"
 
-# Configuration
-GAMES=("sudokute" "termines" "gotermoku")
-INSTALL_DIR="${HOME}/.gameforlinux"
-BIN_DIR="/usr/local/bin"
+# Hàm xử lý gỡ cài đặt 1 tựa game
+uninstall_game() {
+    game="$1"
 
-# ============== UTILITY FUNCTIONS ==============
-
-log_info() {
-    echo -e "${BLUE}ℹ${NC} $1"
-}
-
-log_success() {
-    echo -e "${GREEN}✓${NC} $1"
-}
-
-log_error() {
-    echo -e "${RED}✗${NC} $1"
-}
-
-log_warning() {
-    echo -e "${YELLOW}⚠${NC} $1"
-}
-
-log_header() {
-    echo ""
-    echo -e "${BLUE}═══════════════════════════════════════════════════════════════════${NC}"
-    echo -e "${BLUE}$1${NC}"
-    echo -e "${BLUE}═══════════════════════════════════════════════════════════════════${NC}"
-}
-
-# ============== UNINSTALL FUNCTIONS ==============
-
-confirm_uninstall() {
-    echo -e "\n${YELLOW}This will uninstall all GameForLinux games${NC}"
-    read -p "Are you sure? (y/N) " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        log_info "Uninstall cancelled"
-        exit 0
-    fi
-}
-
-remove_symlinks() {
-    log_info "Removing system shortcuts..."
-    
-    for game in "${GAMES[@]}"; do
-        if [ -L "${BIN_DIR}/${game}" ]; then
-            sudo rm -f "${BIN_DIR}/${game}" 2>/dev/null && \
-            log_success "Removed ${game}"
+    # Xóa symlink ở /usr/local/bin
+    if [ -L "$BINDIR/$game" ] || [ -f "$BINDIR/$game" ]; then
+        if [ -w "$BINDIR" ]; then
+            rm -f "$BINDIR/$game"
+        else
+            sudo rm -f "$BINDIR/$game"
         fi
-    done
-}
+        echo "removed symlink $BINDIR/$game"
+    fi
 
-remove_binaries() {
-    log_info "Removing game binaries..."
-    
-    if [ -d "$INSTALL_DIR" ]; then
-        rm -rf "$INSTALL_DIR"
-        log_success "Cleaned installation directory"
+    # Xóa file nhị phân trong thư mục cache
+    if [ -f "$CACHEDIR/$game" ]; then
+        rm -f "$CACHEDIR/$game"
+        echo "removed binary $CACHEDIR/$game"
     fi
 }
 
-# ============== MAIN EXECUTION ==============
+# Nếu có tham số (ví dụ: ./uninstall.sh sudokute), chỉ xóa game đó
+if [ $# -gt 0 ]; then
+    for game in "$@"; do
+        uninstall_game "$game"
+    done
+# Nếu không có tham số, đọc từ file games.list để xóa tất cả
+else
+    if [ ! -f "$GAMES_FILE" ]; then
+        echo "error: $GAMES_FILE not found" >&2
+        exit 1
+    fi
 
-main() {
-    log_header "🗑️  GameForLinux Uninstaller"
-    
-    confirm_uninstall
-    
-    log_header "Removing Games"
-    
-    remove_symlinks
-    remove_binaries
-    
-    echo ""
-    log_success "All games have been uninstalled"
-    log_info "Thank you for playing! 🎮"
-    echo ""
-}
+    while IFS= read -r game ||[ -n "$game" ]; do
+        [ -z "$game" ] ||[ "${game#\#}" != "$game" ] && continue
+        uninstall_game "$game"
+    done < "$GAMES_FILE"
 
-# Run main function
-main "$@"
+    # Xóa luôn thư mục cache vì đang gỡ cài đặt toàn bộ
+    if [ -d "$CACHEDIR" ]; then
+        rm -rf "$CACHEDIR"
+        echo "removed directory $CACHEDIR"
+    fi
+fi
+
+echo "uninstallation complete."

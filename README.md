@@ -10,216 +10,100 @@
 
 ## ⚡ Quick Start
 
-### Install all games with one command:
+**Install all games with one command:**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ttasc/gameforlinux/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ttasc/gameforlinux/main/install.sh | sh
 ```
 
-**That's it!** Your games are ready to play. 🎉
+Your games are now ready to play! 🎉
 
 ---
 
 ## 🎯 Available Games
 
-| Game | Type | Description | Play |
+| Game | Type | Description | Link |
 |------|------|-------------|------|
-| **🧩 Sudokute** | Puzzle | A minimalist, terminal-native Sudoku implementation | `sudokute` |
-| **💣 Termines** | Strategy | A minimalist, terminal-first Minesweeper clone | `termines` |
-| **⚫ Gotermoku** | Strategy | A minimal, terminal-based Gomoku game | `gotermoku` |
+| **🧩 Sudokute** | Puzzle | A minimalist, terminal-native Sudoku implementation | [ttasc/sudokute](https://github.com/ttasc/sudokute) |
+| **💣 Termines** | Strategy | A minimalist, terminal-first Minesweeper clone | [ttasc/termines](https://github.com/ttasc/termines) |
+| **⚫ Gotermoku** | Strategy | A minimal, terminal-based Gomoku game | [ttasc/gotermoku](https://github.com/ttasc/gotermoku) |
 
-> **More games coming soon!** Built on the blazing-fast `ttbox` TUI library.
+> *Built on the blazing-fast [ttbox](https://github.com/ttasc/ttbox) TUI library.*
 
 ---
 
-## 📦 Installation Methods
+## 📦 Usage & Installation Methods
 
-### Method 1: Automated Script (Recommended) ⭐
-
+### Method 1: Using Make (Recommended for developers)
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ttasc/gameforlinux/main/install.sh | bash
-```
-
-✅ Auto-detects your Linux architecture
-✅ Downloads the correct binaries
-✅ One command, all done
-
-### Method 2: Manual Download
-
-Download binaries directly from [GitHub Releases](https://github.com/ttasc/gameforlinux/releases):
-
-```bash
-# Make executable
-chmod +x sudokute termines gotermoku
-
-# Optional: Move to PATH
-sudo mv sudokute termines gotermoku /usr/local/bin/
-```
-
-### Method 3: Using Make
-
-```bash
-# Clone the repository
 git clone https://github.com/ttasc/gameforlinux.git
 cd gameforlinux
 
 # Install all games
 make install
 
-# Or install specific games
+# Or install a specific game
 make install-sudokute
-make install-termines
-make install-gotermoku
 ```
 
----
-
-## 🎮 Usage
-
-### Play a game:
-
+### Method 2: Manual Download
+Download binaries directly from [GitHub Releases](https://github.com/ttasc/gameforlinux/releases):
 ```bash
-sudokute      # Start Sudoku game
-termines      # Start Minesweeper game
-gotermoku     # Start Gomoku game
+# Example for one game
+chmod +x <game-name>
+sudo mv <game-name> /usr/local/bin/
 ```
 
-### Manage installations:
-
+### 🎮 How to play
+Just type the name of the installed game in your terminal:
 ```bash
-# Check installation status
-make verify
+sudokute
+```
 
-# Update to latest versions
-make update
-
-# Uninstall all games
-./uninstall.sh
-
-# Uninstall specific game
-make uninstall-sudokute
+### 🧹 Management
+```bash
+make test             # Verify installations
+make uninstall        # Remove all games
+make uninstall-termines # Remove specific game
+make build            # Build all games from source
 ```
 
 ---
 
 ## 💻 System Requirements
-
 - **OS:** Linux (any distribution)
-- **Architecture:** x86_64 (Intel/AMD), ARM64, x86 (32-bit)
-- **Terminal:** Any POSIX-compliant terminal (bash, zsh, etc.)
-- **Dependencies:** None! (Static binaries, zero external dependencies)
+- **Architecture:** x86_64 (amd64), ARM64, x86 (386)
+- **Terminal:** Any POSIX-compliant terminal
+- **Dependencies:** None! (Static binaries)
 
 ---
 
-## 🔧 Build from Source
-
-If you want to build games from source:
-
-```bash
-# Clone repository
-git clone https://github.com/ttasc/gameforlinux.git
-cd gameforlinux
-
-# Build all games
-make build-all
-
-# Build specific game
-make build-sudokute
-
-# Install from local builds
-make install-local
-```
-
-**Requirements:**
-- Go 1.20 or higher
-- Git
-
----
-
-## 📁 Project Structure
-
-This repository is designed for easy expansion. Adding new games is simple:
-
-```
+## 📁 Project Structure (Suckless Architecture)
+This repository uses a zero-bloat, centralized configuration:
+```text
 gameforlinux/
-├── games/
-│   ├── sudokute/
-│   ├── termines/
-│   ├── gotermoku/
-│   └── [your-new-game]/     # Add your game here!
-├── scripts/
-│   ├── install-game.sh
-│   ├── download-games.sh
-│   └── ...
-├── Makefile
-├── install.sh
-└── uninstall.sh
+├── builds.sh        # Compile games from source
+├── CONTRIBUTING.md  # How to add a new game
+├── games.list       # Single Source of Truth for all games
+├── install.sh       # Smart POSIX installer
+├── Makefile         # Dynamic task delegator
+├── README.md        # Project documentation
+├── test.sh          # Verify installations
+└── uninstall.sh     # Clean uninstaller
 ```
 
 ---
 
 ## 🤝 Contributing
 
-### Want to add your game?
-
-We'd love to have your Terminal UI games! See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed instructions.
-
-### Quick steps:
-
-1. **Fork** this repository
-2. **Add your game** to the `games/` directory
-3. **Update scripts** to include your game
-4. **Submit a Pull Request**
-
----
-
-## 📊 Project Stats
-
-- **Games:** 3 (and counting! 📈)
-- **Downloads:** Tracking soon!
-- **Contributors:** Open for contributions
-- **License:** MIT (Use freely, even commercially!)
-
----
-
-## 🏗️ Built With
-
-- **Language:** Go (100%)
-- **TUI Library:** [ttbox](https://github.com/ttasc/ttbox) - A hyper-minimalist, POSIX-only Go library for Terminal User Interfaces
-- **Package Manager Integration:** Support for Linux package managers
+Adding your game is incredibly easy! See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+**TL;DR:** Just add your game's repository name to the `games.list` file and submit a PR!
 
 ---
 
 ## 📄 License
-
 MIT License - See [LICENSE](LICENSE) file for details.
 
----
-
-## 🤝 Support & Community
-
-- **Issues:** Found a bug? [Report it here](https://github.com/ttasc/gameforlinux/issues)
-- **Discussions:** Join the conversation in [Discussions](https://github.com/ttasc/gameforlinux/discussions)
-- **Contributing:** New game ideas? See [CONTRIBUTING.md](CONTRIBUTING.md)
-
----
-
-## 🎯 Roadmap
-
-- [x] Sudokute - Sudoku game
-- [x] Termines - Minesweeper game
-- [x] Gotermoku - Gomoku game
-- [ ] More classic games
-- [ ] Game leaderboards
-- [ ] Configuration system
-- [ ] Theme support
-
----
-
 <div align="center">
-
-### Made with ❤️ by [ttasc](https://github.com/ttasc)
-
-**[⬆ Back to top](#-gameforlinux)**
-
+Made with ❤️ by [ttasc](https://github.com/ttasc)
 </div>
