@@ -26,7 +26,7 @@ Your games are now ready to play! 🎉
 |------|------|-------------|------|
 | **🧩 Sudokute** | Puzzle | A minimalist, terminal-native Sudoku implementation | [ttasc/sudokute](https://github.com/ttasc/sudokute) |
 | **💣 Termines** | Strategy | A minimalist, terminal-first Minesweeper clone | [ttasc/termines](https://github.com/ttasc/termines) |
-| **⚫ Gotermoku** | Strategy | A minimal, terminal-based Gomoku game | [ttasc/gotermoku](https://github.com/ttasc/gotermoku) |
+| **⭕ Gotermoku** | Strategy | A minimal, terminal-based Gomoku game | [ttasc/gotermoku](https://github.com/ttasc/gotermoku) |
 
 > *Built on the blazing-fast [ttbox](https://github.com/ttasc/ttbox) TUI library.*
 
@@ -72,7 +72,7 @@ make build            # Build all games from source
 
 ## 💻 System Requirements
 - **OS:** Linux (any distribution)
-- **Architecture:** x86_64 (amd64), ARM64, x86 (386)
+- **Architecture:** x86_64 (amd64), ARM64
 - **Terminal:** Any POSIX-compliant terminal
 - **Dependencies:** None! (Static binaries)
 
@@ -104,6 +104,10 @@ Adding your game is incredibly easy! See [CONTRIBUTING.md](CONTRIBUTING.md) for 
 ## 📄 License
 MIT License - See [LICENSE](LICENSE) file for details.
 
+---
+
 <div align="center">
+
 Made with ❤️ by [ttasc](https://github.com/ttasc)
+
 </div>

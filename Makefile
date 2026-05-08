@@ -6,12 +6,14 @@ help:
 	@echo "usage: make [target]"
 	@echo ""
 	@echo "targets:"
-	@echo "  install       - install all games in games.list"
-	@echo "  install-<g>   - install specific game (e.g. make install-sudokute)"
+	@echo "  install       - install all games"
+	@echo "  install-<g>   - install specific game"
 	@echo "  uninstall     - uninstall all games"
 	@echo "  uninstall-<g> - uninstall specific game"
-	@echo "  build         - build all games from source"
-	@echo "  build-<g>     - build specific game"
+	@echo "  build         - build all games locally"
+	@echo "  build-<g>     - build specific game locally"
+	@echo "  release       - cross-compile all games for release (amd64, arm64, 386)"
+	@echo "  release-<g>   - cross-compile specific game for release"
 	@echo "  test          - verify installations"
 	@echo "  test-<g>      - verify specific game"
 	@echo "  clean         - remove build artifacts"
@@ -34,6 +36,12 @@ build:
 build-%:
 	./builds.sh $*
 
+release:
+	RELEASE=1 ./builds.sh
+
+release-%:
+	RELEASE=1 ./builds.sh $*
+
 test:
 	./test.sh
 
@@ -44,4 +52,4 @@ clean:
 	rm -rf build/ ~/.gameforlinux/
 	@echo "clean complete."
 
-.PHONY: help install uninstall build test clean
+.PHONY: help install uninstall build release test clean

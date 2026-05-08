@@ -4,10 +4,8 @@
 GAMES_FILE="$(dirname "$0")/games.list"
 errors=0
 
-# Hàm verify 1 game
 verify_game() {
     game="$1"
-    # Lệnh command -v kiểm tra xem file có trong PATH và có quyền thực thi không
     if ! command -v "$game" >/dev/null 2>&1; then
         echo "FAIL: $game is not in PATH or not executable" >&2
         errors=$((errors + 1))
@@ -18,7 +16,6 @@ verify_game() {
 
 echo "verifying installations..."
 
-# Chạy test theo đối số hoặc theo danh sách list
 if [ $# -gt 0 ]; then
     for game in "$@"; do
         verify_game "$game"
@@ -34,7 +31,6 @@ else
     done < "$GAMES_FILE"
 fi
 
-# Trả về kết quả
 if [ "$errors" -gt 0 ]; then
     echo "verification failed with $errors error(s)." >&2
     exit 1
