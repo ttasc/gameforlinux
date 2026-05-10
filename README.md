@@ -28,6 +28,7 @@ Your games are now ready to play! 🎉
 | **gotermoku** | A minimal, terminal-based Gomoku game written in Go. | [ttasc/gotermoku](https://github.com/ttasc/gotermoku) |
 | **typense** | A minimalist, real-time typing survival game for the terminal. | [ttasc/typense](https://github.com/ttasc/typense) |
 | **termdash** | A minimalist geometry dash clone on the terminal. | [ttasc/termdash](https://github.com/ttasc/termdash) |
+| **termtron** | Real-time Tron lightcycle duel for the terminal. | [ttasc/termtron](https://github.com/ttasc/termtron) |
 | **termines** | A minimalist, terminal-first Minesweeper clone written in Go. | [ttasc/termines](https://github.com/ttasc/termines) |
 | **sudokute** | A minimalist, terminal-native Sudoku implementation written in Go. | [ttasc/sudokute](https://github.com/ttasc/sudokute) |
 <!-- GAMES_END -->
