@@ -25,10 +25,11 @@ Your games are now ready to play! 🎉
 <!-- GAMES_START -->
 | Game | Description | Link |
 |------|-------------|------|
-| **sudokute** | A minimalist, terminal-native Sudoku implementation written in Go. | [ttasc/sudokute](https://github.com/ttasc/sudokute) |
-| **termines** | A minimalist, terminal-first Minesweeper clone written in Go. | [ttasc/termines](https://github.com/ttasc/termines) |
 | **gotermoku** | A minimal, terminal-based Gomoku game written in Go. | [ttasc/gotermoku](https://github.com/ttasc/gotermoku) |
 | **typense** | A minimalist, real-time typing survival game for the terminal. | [ttasc/typense](https://github.com/ttasc/typense) |
+| **termdash** | A minimalist geometry dash clone on the terminal. | [ttasc/termdash](https://github.com/ttasc/termdash) |
+| **termines** | A minimalist, terminal-first Minesweeper clone written in Go. | [ttasc/termines](https://github.com/ttasc/termines) |
+| **sudokute** | A minimalist, terminal-native Sudoku implementation written in Go. | [ttasc/sudokute](https://github.com/ttasc/sudokute) |
 <!-- GAMES_END -->
 
 > *Built on the blazing-fast [ttbox](https://github.com/ttasc/ttbox) TUI library.*
