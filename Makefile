@@ -52,4 +52,7 @@ clean:
 	rm -rf build/ ~/.gameforlinux/
 	@echo "clean complete."
 
-.PHONY: help install uninstall build release test clean
+readme:
+	./readme.sh
+
+.PHONY: help install uninstall build release test clean readme

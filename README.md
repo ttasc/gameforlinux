@@ -22,11 +22,13 @@ Your games are now ready to play! 🎉
 
 ## 🎯 Available Games
 
-| Game | Type | Description | Link |
-|------|------|-------------|------|
-| **🧩 Sudokute** | Puzzle | A minimalist, terminal-native Sudoku implementation | [ttasc/sudokute](https://github.com/ttasc/sudokute) |
-| **💣 Termines** | Strategy | A minimalist, terminal-first Minesweeper clone | [ttasc/termines](https://github.com/ttasc/termines) |
-| **⭕ Gotermoku** | Strategy | A minimal, terminal-based Gomoku game | [ttasc/gotermoku](https://github.com/ttasc/gotermoku) |
+<!-- GAMES_START -->
+| Game | Description | Link |
+|------|-------------|------|
+| **sudokute** | A minimalist, terminal-native Sudoku implementation written in Go. | [ttasc/sudokute](https://github.com/ttasc/sudokute) |
+| **termines** | A minimalist, terminal-first Minesweeper clone written in Go. | [ttasc/termines](https://github.com/ttasc/termines) |
+| **gotermoku** | A minimal, terminal-based Gomoku game written in Go. | [ttasc/gotermoku](https://github.com/ttasc/gotermoku) |
+<!-- GAMES_END -->
 
 > *Built on the blazing-fast [ttbox](https://github.com/ttasc/ttbox) TUI library.*
 
