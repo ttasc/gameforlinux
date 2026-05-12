@@ -55,4 +55,7 @@ clean:
 readme:
 	./readme.sh
 
+web:
+	./web.sh
+
 .PHONY: help install uninstall build release test clean readme

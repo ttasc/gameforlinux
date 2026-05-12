@@ -1,0 +1,67 @@
+name: Auto Update README & Deploy Web
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'games.list'
+      - 'web/template.html'
+      - 'web.sh'
+      - 'readme.sh'
+      - 'Makefile'
+  schedule:
+    - cron: '0 0 * * 0' # automatic run at 00:00 every Sunday
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Grant execute permission for scripts
+        run: |
+          chmod +x web.sh
+          chmod +x readme.sh
+
+      - name: Make readme
+        run: make readme
+
+      - name: Commit and Push README to main
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add README.md
+
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "docs: auto-update README.md [skip ci]"
+            git push origin main
+            echo "=> Automatic commit and push README.md to main."
+          else
+            echo "=> README.md no changes, skip commiting."
+          fi
+
+      - name: Build static HTML
+        run: make web
+
+      - name: Create Deploy directory
+        run: |
+          mkdir -p deploy_dist
+          mv index.html deploy_dist/
+
+      - name: Deploying Website to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./deploy_dist
+          publish_branch: gh-pages
+          force_orphan: true
