@@ -7,8 +7,8 @@ on:
     paths:
       - 'games.list'
       - 'template.html'
-      - 'web.sh'
-      - 'readme.sh'
+      - 'scripts/web.sh'
+      - 'scripts/readme.sh'
       - 'Makefile'
   schedule:
     - cron: '0 0 * * 0' # automatic run at 00:00 every Sunday
@@ -29,8 +29,8 @@ jobs:
 
       - name: Grant execute permission for scripts
         run: |
-          chmod +x web.sh
-          chmod +x readme.sh
+          chmod +x scripts/web.sh
+          chmod +x scripts/readme.sh
 
       - name: Make readme
         run: make readme
