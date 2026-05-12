@@ -58,4 +58,4 @@ readme:
 web:
 	./web.sh
 
-.PHONY: help install uninstall build release test clean readme
+.PHONY: help install uninstall build release test clean readme web
