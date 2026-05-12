@@ -13,7 +13,7 @@
 **Install all games with one command:**
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ttasc/gameforlinux/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/ttasc/gameforlinux/main/scripts/install.sh | sh
 ```
 
 Your games are now ready to play! 🎉
@@ -84,18 +84,22 @@ make build            # Build all games from source
 
 ---
 
-## 📁 Project Structure (Suckless Architecture)
+## 📁 Project Structure
 This repository uses a zero-bloat, centralized configuration:
 ```text
 gameforlinux/
-├── builds.sh        # Compile games from source
-├── CONTRIBUTING.md  # How to add a new game
-├── games.list       # Single Source of Truth for all games
-├── install.sh       # Smart POSIX installer
-├── Makefile         # Dynamic task delegator
-├── README.md        # Project documentation
-├── test.sh          # Verify installations
-└── uninstall.sh     # Clean uninstaller
+├── CONTRIBUTING.md     # How to add a new game
+├── games.list          # Single Source of Truth for all games
+├── Makefile            # Dynamic task delegator
+├── README.md           # Project documentation
+├── scripts
+│   ├── builds.sh       # Compile games from source
+│   ├── install.sh      # Smart POSIX installer
+│   ├── readme.sh       # Auto-generate games table for README.md
+│   ├── test.sh         # Verify installations
+│   ├── uninstall.sh    # Clean uninstaller
+│   └── web.sh          # Auto-generate index.html from template.html
+└── template.html       # A website template
 ```
 
 ---
