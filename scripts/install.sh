@@ -7,7 +7,7 @@ DEFAULT_ORG="ttasc"
 PREFIX="${PREFIX:-/usr/local}"
 BINDIR="${PREFIX}/bin"
 CACHEDIR="${HOME}/.gameforlinux"
-GAMES_FILE="$(dirname "$0")/games.list"
+GAMES_FILE="$(dirname "$0")/../games.list"
 
 # Check for required download tools
 if command -v curl >/dev/null 2>&1; then

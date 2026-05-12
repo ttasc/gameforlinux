@@ -6,7 +6,7 @@ set -e
 DEFAULT_ORG="ttasc"
 BUILD_DIR="${PWD}/build"
 TEMP_DIR="${TMPDIR:-/tmp}/gameforlinux-build"
-GAMES_FILE="$(dirname "$0")/games.list"
+GAMES_FILE="$(dirname "$0")/../games.list"
 
 # Check for required build tools
 if ! command -v go >/dev/null 2>&1; then echo "error: go is not installed" >&2; exit 1; fi

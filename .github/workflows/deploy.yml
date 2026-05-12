@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'games.list'
-      - 'web/template.html'
+      - 'template.html'
       - 'web.sh'
       - 'readme.sh'
       - 'Makefile'

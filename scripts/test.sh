@@ -1,7 +1,7 @@
 #!/bin/sh
 # test.sh - verify game installations
 
-GAMES_FILE="$(dirname "$0")/games.list"
+GAMES_FILE="$(dirname "$0")/../games.list"
 errors=0
 
 # Function to verify a single game installation

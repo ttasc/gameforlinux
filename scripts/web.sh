@@ -4,20 +4,20 @@ ORG="ttasc"
 HUB_REPO="gameforlinux"
 BASE_RAW_URL="https://raw.githubusercontent.com"
 
-TEMPLATE="web/template.html"
+TEMPLATE="template.html"
 OUTPUT="index.html"
-GAMES_LIST="games.list"
+GAMES_FILE="$(dirname "$0")/../games.list"
 
-if [ ! -f "$TEMPLATE" ] || [ ! -f "$GAMES_LIST" ]; then
-    echo "[ERROR] $TEMPLATE or $GAMES_LIST not found!"
+if [ ! -f "$TEMPLATE" ] || [ ! -f "$GAMES_FILE" ]; then
+    echo "[ERROR] $TEMPLATE or $GAMES_FILE not found!"
     exit 1
 fi
 
 TMP_CARDS=$(mktemp)
 
-echo "=> [1/3] Reading game list $GAMES_LIST..."
+echo "=> [1/3] Reading game list..."
 
-grep -v '^#' "$GAMES_LIST" | grep -v '^[[:space:]]*$' | while IFS= read -r entry; do
+grep -v '^#' "$GAMES_FILE" | grep -v '^[[:space:]]*$' | while IFS= read -r entry; do
 
     if echo "$entry" | grep -q "/"; then
         OWNER=$(echo "$entry" | cut -d'/' -f1)

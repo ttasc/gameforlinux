@@ -86,8 +86,9 @@
         .cmd:hover { background: var(--term-header); }
         .cmd:active { border-left-color: var(--magenta); color: var(--magenta); }
         .cmd::after {
-            content: "Copied!"; position: absolute; right: 15px; color: var(--yellow);
+            content: "Copied!"; position: absolute; right: 10px; color: var(--yellow);
             opacity: 0; transition: opacity 0.2s; font-size: 0.8em;
+            background: inherit; padding: 2px 8px; border-radius: 4px;
         }
         .cmd.copied::after { opacity: 1; }
 

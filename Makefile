@@ -19,43 +19,43 @@ help:
 	@echo "  clean         - remove build artifacts"
 
 install:
-	./install.sh
+	./scripts/install.sh
 
 install-%:
-	./install.sh $*
+	./scripts/install.sh $*
 
 uninstall:
-	./uninstall.sh
+	./scripts/uninstall.sh
 
 uninstall-%:
-	./uninstall.sh $*
+	./scripts/uninstall.sh $*
 
 build:
-	./builds.sh
+	./scripts/builds.sh
 
 build-%:
-	./builds.sh $*
+	./scripts/builds.sh $*
 
 release:
-	RELEASE=1 ./builds.sh
+	RELEASE=1 ./scripts/builds.sh
 
 release-%:
-	RELEASE=1 ./builds.sh $*
+	RELEASE=1 ./scripts/builds.sh $*
 
 test:
-	./test.sh
+	./scripts/test.sh
 
 test-%:
-	./test.sh $*
+	./scripts/test.sh $*
 
 clean:
 	rm -rf build/ ~/.gameforlinux/
 	@echo "clean complete."
 
 readme:
-	./readme.sh
+	./scripts/readme.sh
 
 web:
-	./web.sh
+	./scripts/web.sh
 
 .PHONY: help install uninstall build release test clean readme web

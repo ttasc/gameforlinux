@@ -6,17 +6,27 @@ Thank you for considering contributing to GameForLinux! We use a highly optimize
 
 ## 📋 Requirements for Your Game
 
+To be included in the collection, your repository must meet the following criteria:
+
+### 🛠 Technical Requirements
 1. **Language:** Go (to maintain consistency and ease of cross-compilation).
-2. **TUI Library:** Built on or compatible with [ttbox](https://github.com/ttasc/ttbox) (or any minimal terminal UI library).
-3. **Platform:** Linux-first (POSIX-compliant).
-4. **Build:** Must compile to a single, static binary.
-5. **Releases:** Your repository must have GitHub Releases with assets formatted as `<repo-name>-<os>-<arch>` (e.g., `mygame-linux-amd64`).
+2. **TUI Library:** Built on [ttbox](https://github.com/ttasc/ttbox) or any minimal terminal UI library.
+3. **Platform:** POSIX-compliant (Linux, macOS, BSD).
+4. **Build:** Must compile to a single, static binary with no external dependencies.
+5. **Releases (Crucial):** Your repository must use GitHub Releases. Release assets **must** follow the `<repo-name>-<os>-<arch>` format (e.g., `mygame-linux-amd64`, `mygame-darwin-arm64`).
+
+### 🎨 Display Requirements (For Website & README)
+Our automated scripts scrape your repository to build the [GameForLinux Website](https://ttasc.github.io/gameforlinux/) and update this repo's README. Please format your game's repository as follows:
+1. **Description:** Ensure your repository's `README.md` starts with an `H1` title (`# Your Game Name`), immediately followed by a short description sentence.
+2. **Features:** Include a `## Features` section with bullet points. These will be converted into tags on our website.
+3. **Demo:** Place a `demo.gif` in the root directory of your `main` or `master` branch. The website will automatically use this for the "Watch Demo" button.
 
 ---
 
 ## 🚀 How to Add Your Game
 
 ### Step 1: Fork & Clone
+Fork this repository to your GitHub account, then clone it locally:
 ```bash
 git clone https://github.com/yourusername/gameforlinux.git
 cd gameforlinux
@@ -24,7 +34,7 @@ git checkout -b add-mygame
 ```
 
 ### Step 2: Update the Core List
-Open the `games.list` file in the root directory and add your game using the `username/repo` format on a new line:
+Open the `games.list` file in the root directory and add your game using the `username/repo` format on a new line at the bottom:
 
 ```text
 ttasc/sudokute
@@ -33,15 +43,7 @@ ttasc/termines
 yourusername/mygame
 ```
 
-### Step 3: Auto-Generate the README
-**Do not manually edit the `README.md` table.** We have a built-in script that automatically fetches your repository's description! Just run:
-
-```bash
-make readme
-```
-*This command reads `games.list`, fetches the description directly from your repository's README, and updates the "Available Games" table in our `README.md` automatically.*
-
-### Step 4: Test Your Addition
+### Step 3: Test Your Addition Locally
 Verify that the automation scripts recognize your game dynamically (replace `mygame` with your repository name):
 ```bash
 make install-mygame
@@ -49,15 +51,16 @@ make test-mygame
 make uninstall-mygame
 ```
 
-### Step 5: Submit a Pull Request
-Commit the two changed files (`games.list` and `README.md`) and push to your fork!
+### Step 4: Commit & Submit a Pull Request
+> ⚠️ **IMPORTANT:** **Do NOT run `make readme`, `make web`, or manually edit `README.md` / `index.html`.**
+> Our GitHub Actions CI/CD pipeline will automatically fetch your descriptions and rebuild the README and Website once your PR is merged.
+
+You only need to commit the `games.list` file:
 
 ```bash
-git add games.list README.md
+git add games.list
 git commit -m "feat: add mygame to collection"
 git push origin add-mygame
 ```
 
----
-
-**That's it!** You don't need to touch `install.sh`, `Makefile`, `builds.sh`, or create any document folders. The architecture handles everything automatically.
+Head over to the original repository and open a Pull Request. **That's it!** The system architecture handles everything else for you.

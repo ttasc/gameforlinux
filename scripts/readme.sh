@@ -3,7 +3,7 @@
 
 set -e
 
-GAMES_FILE="$(dirname "$0")/games.list"
+GAMES_FILE="$(dirname "$0")/../games.list"
 README_FILE="$(dirname "$0")/README.md"
 TABLE_TMP="/tmp/gameforlinux_table.tmp"
 

@@ -6,7 +6,7 @@ set -e
 PREFIX="${PREFIX:-/usr/local}"
 BINDIR="${PREFIX}/bin"
 CACHEDIR="${HOME}/.gameforlinux"
-GAMES_FILE="$(dirname "$0")/games.list"
+GAMES_FILE="$(dirname "$0")/../games.list"
 
 # Function to uninstall a single game
 uninstall_game() {
