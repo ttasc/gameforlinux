@@ -85,7 +85,7 @@ grep -v '^#' "$GAMES_FILE" | grep -v '^[[:space:]]*$' | while IFS= read -r entry
                 </div>
                 <div class="game-footer">
                     <p class="text-comment font-sm" style="margin-bottom: 0.5rem;">// Install standalone:</p>
-                    <div class="cmd" aria-label="Copy install command for ${TITLE}">curl -fsSL ${BASE_RAW_URL}/${ORG}/${HUB_REPO}/main/install.sh | sh -s -- ${REPO}</div>
+                    <div class="cmd" aria-label="Copy install command for ${TITLE}">curl -fsSL ${BASE_RAW_URL}/${ORG}/${HUB_REPO}/main/scripts/install.sh | sh -s -- ${REPO}</div>
                     <button class="btn btn-demo" data-demo-url="${DEMO_URL}" aria-label="Watch gameplay demo for ${TITLE}">Watch Demo</button>
                 </div>
             </article>
