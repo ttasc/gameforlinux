@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>GameForLinux - Minimalist Terminal UI Games (TUI)</title>
+    <meta name="description" content="Play awesome Terminal UI games on Linux, macOS, and BSD. A collection of blazing-fast, zero-dependency TUI games written in Go. Pure POSIX philosophy.">
+    <meta name="author" content="ttasc">
+    <link rel="canonical" href="https://ttasc.github.io/gameforlinux/">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ttasc.github.io/gameforlinux/">
+    <meta property="og:title" content="GameForLinux - Minimalist Terminal UI Games">
+    <meta property="og:description" content="No compilation, no hassle, just pure fun! Play blazing-fast Terminal UI games natively on your OS.">
+    <meta property="og:image" content="https://opengraph.githubassets.com/1/ttasc/gameforlinux">
+
+    <style>
+        :root {
+            --bg: #e1e2e7; --term-bg: #f1f2f8; --term-header: #d5d6db;
+            --fg: #343b58; --fg-dark: #4c566a; --blue: #2e7de9;
+            --cyan: #007197; --magenta: #9854f1; --green: #587539;
+            --yellow: #8c6c3e; --red: #f52a65; --comment: #8c92ac;
+            --border: #c4c8da; --card-hover: #ffffff; --shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg: #1a1b26; --term-bg: #16161e; --term-header: #292e42;
+            --fg: #c0caf5; --fg-dark: #a9b1d6; --blue: #7aa2f7;
+            --cyan: #7dcfff; --magenta: #bb9af7; --green: #9ece6a;
+            --yellow: #e0af68; --red: #f7768e; --comment: #565f89;
+            --border: #292e42; --card-hover: #24283b; --shadow: rgba(0, 0, 0, 0.5);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s; }
+        body {
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+            background-color: var(--bg); color: var(--fg);
+            line-height: 1.6; padding: 2rem; max-width: 1100px;
+            margin: 0 auto; position: relative;
+        }
+
+        h1, h2, h3 { color: var(--blue); font-weight: bold; margin-bottom: 1rem; }
+        h1::before { content: "~/ "; color: var(--magenta); font-weight: normal;}
+        h2::before { content: "./ "; color: var(--green); font-weight: normal;}
+        p { margin-bottom: 1rem; color: var(--fg-dark); }
+        a { color: var(--cyan); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        .text-center { text-align: center; } .mt-1 { margin-top: 1rem; } .mt-3 { margin-top: 3rem; }
+        .text-comment { color: var(--comment); } .text-red { color: var(--red); } .font-sm { font-size: 0.9em; }
+
+        #theme-toggle {
+            position: absolute; top: 2rem; right: 2rem;
+            background: var(--term-bg); border: 1px solid var(--border);
+            color: var(--fg); padding: 8px 16px; border-radius: 20px;
+            cursor: pointer; font-family: inherit; font-size: 0.9rem;
+            box-shadow: 0 4px 6px var(--shadow);
+        }
+        #theme-toggle:hover { border-color: var(--blue); }
+
+        .window {
+            background: var(--term-bg); border: 1px solid var(--border);
+            border-radius: 8px; margin-bottom: 2rem; overflow: hidden;
+            box-shadow: 0 10px 30px var(--shadow); margin-top: 1rem;
+        }
+        .window-header {
+            background: var(--term-header); padding: 8px 12px;
+            display: flex; gap: 8px; align-items: center; border-bottom: 1px solid var(--border);
+        }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.red { background: var(--red); } .dot.yellow { background: var(--yellow); } .dot.green { background: var(--green); }
+        .window-body { padding: 1.5rem; }
+
+        .cmd {
+            background: var(--bg); border-left: 3px solid var(--green);
+            padding: 10px 15px; border-radius: 0 6px 6px 0;
+            font-family: inherit; color: var(--green);
+            cursor: pointer; position: relative; margin-bottom: 1rem;
+            white-space: nowrap; overflow-x: auto; overflow-y: hidden;
+            border: 1px solid var(--border); border-left-width: 3px;
+        }
+        .cmd::-webkit-scrollbar { height: 6px; }
+        .cmd::-webkit-scrollbar-thumb { background: var(--comment); border-radius: 3px; }
+        .cmd::before { content: "$ "; color: var(--comment); }
+        .cmd:hover { background: var(--term-header); }
+        .cmd:active { border-left-color: var(--magenta); color: var(--magenta); }
+        .cmd::after {
+            content: "Copied!"; position: absolute; right: 10px; color: var(--yellow);
+            opacity: 0; transition: opacity 0.2s; font-size: 0.8em;
+            background: inherit; padding: 2px 8px; border-radius: 4px;
+        }
+        .cmd.copied::after { opacity: 1; }
+
+        .header-actions {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;
+        }
+        .header-actions h2 { margin-bottom: 0; }
+
+        .search-bar {
+            background: var(--term-bg); border: 1px dashed var(--comment);
+            color: var(--fg); padding: 10px 15px; border-radius: 6px;
+            font-family: inherit; font-size: 0.95rem; outline: none;
+            width: 100%; max-width: 350px;
+        }
+        .search-bar:focus { border-color: var(--blue); border-style: solid; box-shadow: 0 0 0 2px var(--shadow); }
+
+        .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr)); gap: 1.5rem; }
+        .game-card {
+            background: var(--term-bg); border: 1px dashed var(--comment);
+            padding: 1.5rem; border-radius: 6px; box-shadow: 0 4px 10px var(--shadow);
+            display: flex; flex-direction: column;
+        }
+        .game-card:hover { border-color: var(--blue); background: var(--card-hover); border-style: solid; }
+        .game-title { color: var(--magenta); font-size: 1.2rem; display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 0.5rem;}
+        .game-desc { flex-grow: 1; }
+        .game-footer { margin-top: 1rem; width: 100%; overflow: hidden; }
+
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1rem; }
+        .tag { background: var(--bg); color: var(--fg); border: 1px solid var(--border); font-size: 0.75rem; padding: 2px 10px; border-radius: 12px; }
+
+        .btn {
+            background: none; border: none; color: var(--yellow);
+            font-family: inherit; font-size: 0.9rem; cursor: pointer;
+            padding: 5px 0; display: inline-block; font-weight: bold; width: max-content;
+        }
+        .btn:hover { color: var(--red); }
+        .btn::before { content: "[ "; color: var(--comment); font-weight: normal;}
+        .btn::after { content: " ]"; color: var(--comment); font-weight: normal;}
+
+        .modal {
+            display: none; position: fixed; z-index: 9999; left: 0; top: 0;
+            width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85);
+            align-items: center; justify-content: center; backdrop-filter: blur(4px);
+        }
+        .modal-content { position: relative; max-width: 90vw; max-height: 90vh; }
+        .modal-content img {
+            max-width: 100%; max-height: 90vh; border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); object-fit: contain;
+        }
+        .close-btn { position: absolute; top: -40px; right: 0; color: #fff; font-size: 2rem; font-weight: bold; cursor: pointer; transition: color 0.3s; }
+        .close-btn:hover { color: var(--red); }
+
+        @media (max-width: 768px) {
+            body { padding: 1.2rem; }
+            #theme-toggle { position: relative; top: 0; right: 0; margin-bottom: 1.5rem; display: block; width: max-content; }
+            .window-body, .game-card { padding: 1rem; }
+            .game-title { flex-direction: column; gap: 0.5rem; align-items: flex-start; }
+            .cmd { font-size: 0.85rem; padding: 10px; }
+            .header-actions h2 { margin-bottom: 0.5rem; }
+            .search-bar { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <button id="theme-toggle" aria-label="Toggle dark/light mode">Dark Mode</button>
+
+    <header>
+        <h1>GameForLinux</h1>
+        <p>A collection of blazing fast, minimalist Terminal UI games written in Go.<br>
+        Zero dependencies. No compilation needed. Pure POSIX philosophy.</p>
+    </header>
+
+    <main>
+        <section class="window" aria-labelledby="install-title">
+            <div class="window-header">
+                <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+            </div>
+            <div class="window-body">
+                <h2 id="install-title">Install Everything</h2>
+                <p>Fetch and install the entire collection (Linux, macOS, BSD):</p>
+                <div class="cmd" aria-label="Copy install command">curl -fsSL https://raw.githubusercontent.com/ttasc/gameforlinux/main/scripts/install.sh | sh</div>
+
+                <p class="mt-1 text-comment">// Other useful commands (run in the root directory):</p>
+                <div class="cmd" aria-label="Copy make test command">make test</div>
+                <div class="cmd" aria-label="Copy make uninstall command">make uninstall</div>
+            </div>
+        </section>
+
+        <section aria-labelledby="available-games-title">
+            <div class="header-actions">
+                <h2 id="available-games-title">Available Games (7)</h2>
+                <input type="text" id="search-input" class="search-bar" aria-label="Search through available games" placeholder="$ grep game_name...">
+            </div>
+
+            <div id="games-container" class="games-grid">
+            <article class="game-card" data-search="⭕ gotermoku a minimal, terminal-based gomoku game written in go. offline ai bot p2p online vim-key mouse control ">
+                <div class="game-desc">
+                    <h3 class="game-title">
+                        <span>⭕ gotermoku</span>
+                        <a href="https://github.com/ttasc/gotermoku" target="_blank" rel="noopener noreferrer" aria-label="View source code for ⭕ gotermoku">View Source ↗</a>
+                    </h3>
+                    <p>A minimal, terminal-based Gomoku game written in Go.</p>
+                    <div class="tags"><span class="tag">Offline</span><span class="tag">AI Bot</span><span class="tag">P2P online</span><span class="tag">Vim-key</span><span class="tag">Mouse control</span></div>
+                </div>
+                <div class="game-footer">
+                    <p class="text-comment font-sm" style="margin-bottom: 0.5rem;">// Install standalone:</p>
+                    <div class="cmd" aria-label="Copy install command for ⭕ gotermoku">curl -fsSL https://raw.githubusercontent.com/ttasc/gameforlinux/main/scripts/install.sh | sh -s -- gotermoku</div>
+                    <button class="btn btn-demo" data-demo-url="https://raw.githubusercontent.com/ttasc/gotermoku/refs/heads/master/demo.gif" aria-label="Watch gameplay demo for ⭕ gotermoku">Watch Demo</button>
+                </div>
+            </article>
+            <article class="game-card" data-search="⌨️ typense a minimalist, real-time typing survival game for the terminal. real-time engine smart target locking dynamic difficulty combo system terminal-native ux custom dictionaries ">
+                <div class="game-desc">
+                    <h3 class="game-title">
+                        <span>⌨️ typense</span>
+                        <a href="https://github.com/ttasc/typense" target="_blank" rel="noopener noreferrer" aria-label="View source code for ⌨️ typense">View Source ↗</a>
+                    </h3>
+                    <p>A minimalist, real-time typing survival game for the terminal.</p>
+                    <div class="tags"><span class="tag">Real-time Engine</span><span class="tag">Smart Target Locking</span><span class="tag">Dynamic Difficulty</span><span class="tag">Combo System</span><span class="tag">Terminal-Native UX</span><span class="tag">Custom Dictionaries</span></div>
+                </div>
+                <div class="game-footer">
+                    <p class="text-comment font-sm" style="margin-bottom: 0.5rem;">// Install standalone:</p>
+                    <div class="cmd" aria-label="Copy install command for ⌨️ typense">curl -fsSL https://raw.githubusercontent.com/ttasc/gameforlinux/main/scripts/install.sh | sh -s -- typense</div>
+                    <button class="btn btn-demo" data-demo-url="https://raw.githubusercontent.com/ttasc/typense/refs/heads/master/demo.gif" aria-label="Watch gameplay demo for ⌨️ typense">Watch Demo</button>
+                </div>
+            </article>
+            <article class="game-card" data-search="🔷 termdash a minimalist geometry dash clone on the terminal. ">
+                <div class="game-desc">
+                    <h3 class="game-title">
+                        <span>🔷 termdash</span>
+                        <a href="https://github.com/ttasc/termdash" target="_blank" rel="noopener noreferrer" aria-label="View source code for 🔷 termdash">View Source ↗</a>
+                    </h3>
+                    <p>A minimalist geometry dash clone on the terminal.</p>
+                    
+                </div>
+                <div class="game-footer">
+                    <p class="text-comment font-sm" style="margin-bottom: 0.5rem;">// Install standalone:</p>
+                    <div class="cmd" aria-label="Copy install command for 🔷 termdash">curl -fsSL https://raw.githubusercontent.com/ttasc/gameforlinux/main/scripts/install.sh | sh -s -- termdash</div>
+                    <button class="btn btn-demo" data-demo-url="https://raw.githubusercontent.com/ttasc/termdash/refs/heads/master/demo.gif" aria-label="Watch gameplay demo for 🔷 termdash">Watch Demo</button>
+                </div>
+            </article>
+            <article class="game-card" data-search="🏍️ termtron real-time tron lightcycle duel for the terminal. real-time competitive authentic tron mechanics terminal-native ">
+                <div class="game-desc">
+                    <h3 class="game-title">
+                        <span>🏍️ termtron</span>
+                        <a href="https://github.com/ttasc/termtron" target="_blank" rel="noopener noreferrer" aria-label="View source code for 🏍️ termtron">View Source ↗</a>
+                    </h3>
+                    <p>Real-time Tron lightcycle duel for the terminal.</p>
+                    <div class="tags"><span class="tag">Real-time</span><span class="tag">Competitive</span><span class="tag">Authentic Tron Mechanics</span><span class="tag">Terminal-Native</span></div>
+                </div>
+                <div class="game-footer">
+                    <p class="text-comment font-sm" style="margin-bottom: 0.5rem;">// Install standalone:</p>
+                    <div class="cmd" aria-label="Copy install command for 🏍️ termtron">curl -fsSL https://raw.githubusercontent.com/ttasc/gameforlinux/main/scripts/install.sh | sh -s -- termtron</div>
+                    <button class="btn btn-demo" data-demo-url="https://raw.githubusercontent.com/ttasc/termtron/refs/heads/master/demo.gif" aria-label="Watch gameplay demo for 🏍️ termtron">Watch Demo</button>
+                </div>
+            </article>
+            <article class="game-card" data-search="💣 termines a minimalist, terminal-first minesweeper clone written in go. mouse/vim-key chording first-click safe optimized three difficulties ">
+                <div class="game-desc">
+                    <h3 class="game-title">
+                        <span>💣 termines</span>
+                        <a href="https://github.com/ttasc/termines" target="_blank" rel="noopener noreferrer" aria-label="View source code for 💣 termines">View Source ↗</a>
+                    </h3>
+                    <p>A minimalist, terminal-first Minesweeper clone written in Go.</p>
+                    <div class="tags"><span class="tag">Mouse/Vim-key</span><span class="tag">Chording</span><span class="tag">First-click safe</span><span class="tag">Optimized</span><span class="tag">Three Difficulties</span></div>
+                </div>
+                <div class="game-footer">
+                    <p class="text-comment font-sm" style="margin-bottom: 0.5rem;">// Install standalone:</p>
+                    <div class="cmd" aria-label="Copy install command for 💣 termines">curl -fsSL https://raw.githubusercontent.com/ttasc/gameforlinux/main/scripts/install.sh | sh -s -- termines</div>
+                    <button class="btn btn-demo" data-demo-url="https://raw.githubusercontent.com/ttasc/termines/refs/heads/master/demo.gif" aria-label="Watch gameplay demo for 💣 termines">Watch Demo</button>
+                </div>
+            </article>
+            <article class="game-card" data-search="🔢 sudokute a minimalist, terminal-native sudoku implementation written in go. procedural generation real-time validation hybrid input modern tui dynamic feedback ">
+                <div class="game-desc">
+                    <h3 class="game-title">
+                        <span>🔢 sudokute</span>
+                        <a href="https://github.com/ttasc/sudokute" target="_blank" rel="noopener noreferrer" aria-label="View source code for 🔢 sudokute">View Source ↗</a>
+                    </h3>
+                    <p>A minimalist, terminal-native Sudoku implementation written in Go.</p>
+                    <div class="tags"><span class="tag">Procedural Generation</span><span class="tag">Real-time Validation</span><span class="tag">Hybrid Input</span><span class="tag">Modern TUI</span><span class="tag">Dynamic Feedback</span></div>
+                </div>
+                <div class="game-footer">
+                    <p class="text-comment font-sm" style="margin-bottom: 0.5rem;">// Install standalone:</p>
+                    <div class="cmd" aria-label="Copy install command for 🔢 sudokute">curl -fsSL https://raw.githubusercontent.com/ttasc/gameforlinux/main/scripts/install.sh | sh -s -- sudokute</div>
+                    <button class="btn btn-demo" data-demo-url="https://raw.githubusercontent.com/ttasc/sudokute/refs/heads/master/demo.gif" aria-label="Watch gameplay demo for 🔢 sudokute">Watch Demo</button>
+                </div>
+            </article>
+            <article class="game-card" data-search="🔢 2048 a minimal, terminal-based 2048 game. ">
+                <div class="game-desc">
+                    <h3 class="game-title">
+                        <span>🔢 2048</span>
+                        <a href="https://github.com/ttasc/2048" target="_blank" rel="noopener noreferrer" aria-label="View source code for 🔢 2048">View Source ↗</a>
+                    </h3>
+                    <p>A minimal, terminal-based 2048 game.</p>
+                    
+                </div>
+                <div class="game-footer">
+                    <p class="text-comment font-sm" style="margin-bottom: 0.5rem;">// Install standalone:</p>
+                    <div class="cmd" aria-label="Copy install command for 🔢 2048">curl -fsSL https://raw.githubusercontent.com/ttasc/gameforlinux/main/scripts/install.sh | sh -s -- 2048</div>
+                    <button class="btn btn-demo" data-demo-url="https://raw.githubusercontent.com/ttasc/2048/refs/heads/master/demo.gif" aria-label="Watch gameplay demo for 🔢 2048">Watch Demo</button>
+                </div>
+            </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="mt-3 text-center text-comment font-sm">
+        <p>Built with <span class="text-red">♥</span> for the Terminal. <br>
+        Source code available on <a href="https://github.com/ttasc/gameforlinux" target="_blank" rel="noopener noreferrer" aria-label="View GameForLinux on GitHub">GitHub</a>.</p>
+    </footer>
+
+    <div id="demo-modal" class="modal" role="dialog" aria-modal="true" aria-label="Game Demo Modal">
+        <div class="modal-content">
+            <span class="close-btn" aria-label="Close demo">&times;</span>
+            <img id="modal-img" src="" alt="Game Demo Animation">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const body = document.documentElement;
+            const themeBtn = document.getElementById('theme-toggle');
+            const searchInput = document.getElementById('search-input');
+            const modal = document.getElementById('demo-modal');
+            const modalImg = document.getElementById('modal-img');
+
+            if (localStorage.getItem('theme') === 'dark') {
+                body.setAttribute('data-theme', 'dark');
+                themeBtn.innerText = 'Light Mode';
+            }
+
+            document.addEventListener('click', async (e) => {
+
+                if (e.target.id === 'theme-toggle') {
+                    const isDark = body.getAttribute('data-theme') === 'dark';
+                    body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+                    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+                    themeBtn.innerText = isDark ? 'Dark Mode' : 'Light Mode';
+                    return;
+                }
+
+                const cmdEl = e.target.closest('.cmd');
+                if (cmdEl) {
+                    const text = cmdEl.innerText.replace('Copied!', '').trim();
+                    try {
+                        await navigator.clipboard.writeText(text);
+                        cmdEl.classList.add('copied');
+                        setTimeout(() => cmdEl.classList.remove('copied'), 1500);
+                    } catch (err) { console.error('Failed to copy!', err); }
+                    return;
+                }
+
+                const demoBtn = e.target.closest('.btn-demo');
+                if (demoBtn) {
+                    const demoUrl = demoBtn.getAttribute('data-demo-url');
+                    if (demoUrl) {
+                        modalImg.src = demoUrl;
+                        modal.style.display = 'flex';
+                        document.body.style.overflow = 'hidden';
+                    }
+                    return;
+                }
+
+                if (e.target.closest('.close-btn') || e.target.id === 'demo-modal') {
+                    modal.style.display = 'none';
+                    modalImg.src = '';
+                    document.body.style.overflow = '';
+                    return;
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && modal.style.display === 'flex') {
+                    modal.style.display = 'none';
+                    modalImg.src = '';
+                    document.body.style.overflow = '';
+                }
+            });
+
+            let debounceTimer;
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    clearTimeout(debounceTimer);
+                    debounceTimer = setTimeout(() => {
+                        const keyword = e.target.value.toLowerCase();
+                        const cards = document.querySelectorAll('.game-card');
+
+                        cards.forEach(card => {
+                            const searchContent = card.getAttribute('data-search') || '';
+                            card.style.display = searchContent.includes(keyword) ? 'flex' : 'none';
+                        });
+                    }, 250);
+                });
+            }
+        });
+    </script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "GameForLinux",
+      "operatingSystem": "Linux, macOS, BSD",
+      "applicationCategory": "GameApplication",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "author": { "@type": "Person", "name": "ttasc", "url": "https://github.com/ttasc" },
+      "description": "A collection of minimal terminal UI games for Linux, macOS, and BSD written in Go. Zero dependencies.",
+      "url": "https://ttasc.github.io/gameforlinux/"
+    }
+    </script>
+</body>
+</html>
