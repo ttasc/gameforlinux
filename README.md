@@ -31,6 +31,7 @@ Your games are now ready to play! 🎉
 | **termtron** | Real-time Tron lightcycle duel for the terminal. | [ttasc/termtron](https://github.com/ttasc/termtron) |
 | **termines** | A minimalist, terminal-first Minesweeper clone written in Go. | [ttasc/termines](https://github.com/ttasc/termines) |
 | **sudokute** | A minimalist, terminal-native Sudoku implementation written in Go. | [ttasc/sudokute](https://github.com/ttasc/sudokute) |
+| **termpac** | A minimalist, terminal-first Pacman clone written in Go. | [ttasc/termpac](https://github.com/ttasc/termpac) |
 | **2048** | A minimal, terminal-based 2048 game. | [ttasc/2048](https://github.com/ttasc/2048) |
 <!-- GAMES_END -->
 
